@@ -145,7 +145,7 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
-
+bin/
 # Cython debug symbols
 cython_debug/
 
@@ -157,6 +157,7 @@ cython_debug/
 #.idea/
 
 ### VisualStudioCode ###
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

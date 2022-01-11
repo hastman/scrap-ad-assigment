@@ -1,0 +1,32 @@
+version: '3'
+services:
+  api_v1:
+    container_name: api_v1
+    image: hastman/scrap_ad_v1
+    user: apirunner
+    volumes:
+      - ./storage:/data
+    env_file:
+      - .env      
+  api_v2:
+    container_name: api_v2
+    image: hastman/scrap_ad_v1d   
+    user: apirunner
+    volumes:
+      - ./storage:/data
+    env_file:
+      - .env
+  nginx: 
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/scrapad.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80  
+    links:
+      - api_v1
+      - api_v2
+
+
+ 
+  
