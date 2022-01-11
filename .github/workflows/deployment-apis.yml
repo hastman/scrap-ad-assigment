@@ -1,17 +1,37 @@
-name: GitHub Actions Demo
-on: [push]
+name: Build and deploy to Docker hub
+on:
+  push:
+    branches: [main]
 jobs:
-  Explore-GitHub-Actions:
+  build_geofence_v1:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
+      - name: Checkout
         uses: actions/checkout@v2
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.6"
+
+      - name: Install dependencies
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          python -m pip install --upgrade pip
+          cd geofenceapi_v1
+          pip install -r requirements_dev.txt
+      - name: Run test suite
+        run: |
+          cd geofenceapi_v1
+          pytest
+      - name: Login into docker hub
+        env:
+          DOCKER_USER: hastman
+          DOCKER_PASSWORD: 1cbad0b0-9505-43bb-a363-270f60c50cae
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Build image
+        run: |
+          cd geofenceapi_v1
+          docker build . --tag hastman/scrap_ad_v1:latest
+      - name: Push Image
+        run: docker push hastman/scrap_ad_v1
