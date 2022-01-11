@@ -1,5 +1,7 @@
 # Scrap Ad FullStack Assignment
 
+[![Build and deploy to Docker hub](https://github.com/hastman/scrap-ad-assigment/actions/workflows/deployment-apis.yml/badge.svg?branch=main)](https://github.com/hastman/scrap-ad-assigment/actions/workflows/deployment-apis.yml)
+
 ## RepoContent
 
 - geofenceapi_v1 : First version of API
@@ -8,6 +10,15 @@
 - storage: Contains geojson file
 
 ## Build & Run images
+
+### Env vars
+
+- Volume for geofence : `STORAGE_LOCATION=/data/geofence.json`
+- Sec X-API-KEY header:`API_KEY=your_choice`
+- New Relic Monitoring file: `NEW_RELIC_CONFIG_FILE=newrelic.ini`
+- New Relic Monitoring key: `NEW_RELIC_LICENSE_KEY=your_new_relic_key`
+- Root path for open api docs versioning: `ROOT_PATH_V1=/v1`
+- Root path for open api docs versioning: `ROOT_PATH_V2=/v2`
 
 ### geofecnceapi_v1
 
@@ -38,10 +49,10 @@ The repository contains a docker-compose.yml file with the implementation of thi
 
 ## CI/CD
 
-This project is integrated with Github actions for continuous integration, this action executes the tests, builds the docker image and uploads it to the docker hub repository
+This project is integrated with Github actions for continuous integration, this action executes the tests, builds the docker image and uploads it to the docker hub repository the actions fire on release event
 
 ## Monitoring and Metrics
 
 Both apis have a health check endpoint, that endoint is used in the container for monitoring.
 
-For metrics collection and active monitoring, New Relic is used, which is installed as an agent within the APIs and also on the host where the APIs are deployed.
+For metrics collection and active monitoring, New Relic is used, which is installed as an agent within the APIs and also on the host where the containers are deployed.

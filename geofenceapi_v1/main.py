@@ -15,7 +15,7 @@ def is_authenticated(x_api_key: str = Security(X_API_KEY)):
                             detail="No api key found in header")
 
 
-app = FastAPI()
+app = FastAPI(openapi_prefix=os.getenv('ROOT_PATH_V1', ''))
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
