@@ -55,14 +55,14 @@ def test_when_api_is_health_should_return_ok_status_code(prepare_basic_test, mon
 
 
 def test_when_call_secured_endoint_without_api_key_header_should_return_forbidden_status_code():
-    response = client.post("/geofence/point", json={"x": 0.0, "y": 0.0})
+    response = client.post("/geofence/in_fence/0.0/0.0")
     assert response.status_code == 403
 
 
 def test_when_call_secured_endoint_with_invalid_api_key_header_should_return_unauthorized_status_code(monkeypatch):
     monkeypatch.setenv('API_KEY', "1231232")
     response = client.post(
-        "/geofence/point", json={"x": 0.0, "y": 0.0}, headers={"X-API-KEY": "222222"})
+        "/geofence/in_fence/0.0/0.0", headers={"X-API-KEY": "222222"})
     assert response.status_code == 401
 
 
@@ -70,7 +70,7 @@ def test_when_send_point_and_not_exists_in_fence_should_return_not_found_status_
     monkeypatch.setenv('STORAGE_LOCATION', prepare_basic_test)
     monkeypatch.setenv('API_KEY', "222222")
     response = client.post(
-        "/geofence/point", json={"x": 0.0, "y": 0.0}, headers={"X-API-KEY": "222222"})
+        "/geofence/in_fence/0.0/0.0", headers={"X-API-KEY": "222222"})
     assert response.status_code == 404
 
 
@@ -78,30 +78,6 @@ def test_when_send_point_and_exists_in_fence_should_return_ok_no_content_status_
     monkeypatch.setenv('STORAGE_LOCATION', prepare_basic_test)
     monkeypatch.setenv('API_KEY', "222222")
     response = client.post(
-        "/geofence/point", json={"x": 68.247070, "y": 4.12728}, headers={"X-API-KEY": "222222"})
-    assert response.status_code == 204
-
-
-def test_when_try_to_update_fence_and_polygon_has_only_two_coordinates_should_return_bad_request(monkeypatch):
-    monkeypatch.setenv('API_KEY', "222222")
-    response = client.put(
-        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}]}, headers={"X-API-KEY": "222222"})
-    assert response.status_code == 400
-    assert response.json() == {"msg": "Invalid polygon, minimun three points"}
-
-
-def test_when_try_to_update_fence_and_poligon_is_not_closed_should_return_bad_request(monkeypatch):
-    monkeypatch.setenv('API_KEY', "222222")
-    response = client.put(
-        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 1}]}, headers={"X-API-KEY": "222222"})
-    assert response.status_code == 400
-    assert response.json() == {
-        "msg": "Invalid polygon, coordenates must be closed"}
-
-
-def test_when_try_to_update_fence_and_poligon_is_not_closed_should_return_bad_request(prepare_basic_test, monkeypatch):
-    monkeypatch.setenv('API_KEY', "222222")
-    monkeypatch.setenv('STORAGE_LOCATION', prepare_basic_test)
-    response = client.put(
-        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": 0, "y": 0}]}, headers={"X-API-KEY": "222222"})
-    assert response.status_code == 204
+        "/geofence/in_fence/68.247070/4.12728", headers={"X-API-KEY": "222222"})
+    assert response.status_code == 200
+    assert response.json()["threshold"] > -1

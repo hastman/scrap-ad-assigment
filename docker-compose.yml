@@ -10,7 +10,7 @@ services:
       - .env      
   api_v2:
     container_name: api_v2
-    image: hastman/scrap_ad_v1d   
+    image: hastman/scrap_ad_v2   
     user: apirunner
     volumes:
       - ./storage:/data

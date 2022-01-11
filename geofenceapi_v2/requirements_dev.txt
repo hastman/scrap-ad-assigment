@@ -1,0 +1,7 @@
+fastapi>=0.68.0,<0.69.0
+pydantic>=1.8.0,<2.0.0
+shapely==1.8.0
+uvicorn>=0.15.0,<0.16.0
+pytest==6.2.5
+newrelic==7.2.4.171
+requests==2.27.1
