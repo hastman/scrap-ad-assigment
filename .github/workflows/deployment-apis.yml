@@ -25,8 +25,8 @@ jobs:
           pytest
       - name: Login into docker hub
         env:
-          DOCKER_USER: hastman
-          DOCKER_PASSWORD: 1cbad0b0-9505-43bb-a363-270f60c50cae
+          DOCKER_USER: ${{secrets.DOCKER_HUB_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Build image
