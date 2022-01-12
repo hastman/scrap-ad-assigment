@@ -23,8 +23,12 @@ jobs:
       - name: Run test suite
         run: |
           cd geofenceapi_v1
-          pytest
-
+          pytest --cov=. --cov-report xml
+      - name: Coverage badge
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GIT_HUB_TOKEN }}
+          path-to-lcov: geofenceapi_v1/coverage.xml
       - name: Login into docker hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -63,7 +67,12 @@ jobs:
       - name: Run test suite
         run: |
           cd geofenceapi_v2
-          pytest
+          pytest --cov=. --cov-report xml
+      - name: Coverage badge
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GIT_HUB_TOKEN }}
+          path-to-lcov: geofenceapi_v2/coverage.xml
       - name: Login into docker hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
