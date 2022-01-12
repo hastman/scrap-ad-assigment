@@ -84,6 +84,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
   deploy_to_aws:
+    needs: [build_geofence_v1, build_geofence_v2]
     runs-on: ubuntu-latest
       steps:
       - name: executing remote ssh commands using password
