@@ -1,4 +1,3 @@
-import re
 from fastapi import FastAPI,  status, HTTPException, Security, Response
 from fastapi.security import APIKeyHeader
 from models.models_in import Point
@@ -15,7 +14,7 @@ def is_authenticated(x_api_key: str = Security(X_API_KEY)):
                             detail="No api key found in header")
 
 
-app = FastAPI(openapi_prefix=os.getenv('ROOT_PATH_V2', ''))
+app = FastAPI()
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)

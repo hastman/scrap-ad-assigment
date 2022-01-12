@@ -19,8 +19,6 @@
 - Sec X-API-KEY header:`API_KEY=your_choice`
 - New Relic Monitoring file: `NEW_RELIC_CONFIG_FILE=newrelic.ini`
 - New Relic Monitoring key: `NEW_RELIC_LICENSE_KEY=your_new_relic_key`
-- Root path for open api docs versioning: `ROOT_PATH_V1=/v1`
-- Root path for open api docs versioning: `ROOT_PATH_V2=/v2`
 
 ### geofecnceapi_v1
 
@@ -53,8 +51,24 @@ The repository contains a docker-compose.yml file with the implementation of thi
 
 This project is integrated with Github actions for continuous integration, this action executes the tests,run coverage and builds the docker image and uploads it to the docker hub repository the actions fire on release event. This action also performs the deployment via a remote ssh script using `deploy.sh`.
 
+Unit and end-to-end tests are used to test the api.
+
 ## Monitoring and Metrics
 
 Both apis have a health check endpoint, that endoint is used in the container for monitoring.
 
 For metrics collection and active monitoring, New Relic is used, which is installed as an agent within the APIs and also on the host where the containers are deployed.
+
+## API Rate Limit
+
+Nginx defines the ratio of requests supported by the services, it is configured for a limit of one request per second on average for a given ip.
+
+Errors are indicated with status code 429 too many request.
+
+```
+ limit_req_zone $binary_remote_addr zone=scrapad:10m rate=1r/s;
+ limit_req_status 429;
+ limit_conn_status 429;
+```
+
+You can test it with [loadtest](https://www.npmjs.com/package/loadtest) using the following commands: `loadtest -t 5 -c 2 --rps 6 http://server_ip/v1/health` && `loadtest -t 5 -c 2 --rps 6 http://localhost/v2/health`. This command execute 6 request per second for 2 seconds with two concurrent clients.
