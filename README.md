@@ -1,6 +1,7 @@
 # Scrap Ad FullStack Assignment
 
 [![Build and deploy to Docker hub](https://github.com/hastman/scrap-ad-assigment/actions/workflows/deployment-apis.yml/badge.svg?branch=main&event=release)](https://github.com/hastman/scrap-ad-assigment/actions/workflows/deployment-apis.yml)
+[![codecov](https://codecov.io/gh/hastman/scrap-ad-assigment/branch/main/graph/badge.svg?token=JAXZ6K1R0A)](https://codecov.io/gh/hastman/scrap-ad-assigment)
 
 ## RepoContent
 
