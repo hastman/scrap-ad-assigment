@@ -12,7 +12,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.6"
+          python-version: "3.8"
 
       - name: Install dependencies
         run: |
@@ -23,12 +23,17 @@ jobs:
       - name: Run test suite
         run: |
           cd geofenceapi_v1
-          pytest --cov=. --cov-report xml
+          pytest --cov=.
+      - name: Covert Coverage Results
+        run: |
+          pip install coveragepy-lcov
+          cd geofenceapi_v1
+          coveragepy-lcov --data_file_path .coverage --output_file_path lcov.info
       - name: Coverage badge
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GIT_HUB_TOKEN }}
-          path-to-lcov: geofenceapi_v1/coverage.xml
+          path-to-lcov: geofenceapi_v1/lcov.info
       - name: Login into docker hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -57,7 +62,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.6"
+          python-version: "3.8"
 
       - name: Install dependencies
         run: |
@@ -67,12 +72,17 @@ jobs:
       - name: Run test suite
         run: |
           cd geofenceapi_v2
-          pytest --cov=. --cov-report xml
+          pytest --cov=.
+      - name: Covert Coverage Results
+        run: |
+          pip install coveragepy-lcov
+          cd geofenceapi_v2
+          coveragepy-lcov --data_file_path .coverage --output_file_path lcov.info
       - name: Coverage badge
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GIT_HUB_TOKEN }}
-          path-to-lcov: geofenceapi_v2/coverage.xml
+          path-to-lcov: geofenceapi_v2/lcov.info
       - name: Login into docker hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -99,7 +109,7 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AWS_EC2_IP }}
-          username: ${{ secrets.AWS_USER_NAME }}
+          host: ${{ secrets.AWS_PRIVATE_KEY }}
+          username: ${{ secrets.AWS_PRIVATE_KEY }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
-          script: deploy.sh
+          script: ${{ secrets.DEPLOY_SCRIPT_DOCKER_COMPOSE }}

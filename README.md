@@ -4,10 +4,12 @@
 
 ## RepoContent
 
-- geofenceapi_v1 : First version of API
-- geofenceapi_v2 : Second version of API
+- geofenceapi_v1 : First version of API, written in Python with FastAPI
+- geofenceapi_v2 : Second version of API, written in Python with FastAPI
 - nginx: Nginx conf for versioning strategy
 - storage: Contains geojson file
+- deploy.sh : Script for remote deployment
+- docker-compose.yml : Docker compose file for deployment, deploy all api versions and nginx
 
 ## Build & Run images
 
@@ -49,7 +51,7 @@ The repository contains a docker-compose.yml file with the implementation of thi
 
 ## CI/CD
 
-This project is integrated with Github actions for continuous integration, this action executes the tests, builds the docker image and uploads it to the docker hub repository the actions fire on release event
+This project is integrated with Github actions for continuous integration, this action executes the tests,run coverage and builds the docker image and uploads it to the docker hub repository the actions fire on release event. This action also performs the deployment via a remote ssh script using `deploy.sh`.
 
 ## Monitoring and Metrics
 
