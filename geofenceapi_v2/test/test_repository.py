@@ -38,7 +38,3 @@ class RepositoryTest(unittest.TestCase):
         point_inside = Point(68.2473, 4.1272)
         distance = self.repositorySUT.find_point_in_fence(point_inside)
         self.assertGreater(distance, -1)
-
-
-if __name__ == '__main__':
-    unittest.main()

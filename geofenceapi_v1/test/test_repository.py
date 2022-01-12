@@ -37,7 +37,3 @@ class RepositoryTest(unittest.TestCase):
     def test_when_check_point_and_belongs_to_base_polygon_should_return_true(self):
         point_inside = Point(68.2473, 4.1272)
         self.assertTrue(self.repositorySUT.find_point_in_fence(point_inside))
-
-
-if __name__ == '__main__':
-    unittest.main()

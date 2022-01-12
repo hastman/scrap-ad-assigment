@@ -43,7 +43,13 @@ def prepare_basic_test():
     os.remove(file_name)
 
 
-def test_when_api_is_not_health_should_return_service_unavaliable_status_code():
+def test_when_not_exists_env_var_for_storage_location_should_returnt_service_unavailable():
+    response = client.get("/health")
+    assert response.status_code == 503
+
+
+def test_when_exists_env_var_for_storage_location_but_is_not_a_folder_should_returnt_service_unavailable(monkeypatch):
+    monkeypatch.setenv('STORAGE_LOCATION', '/tmp')
     response = client.get("/health")
     assert response.status_code == 503
 

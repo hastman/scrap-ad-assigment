@@ -43,7 +43,13 @@ def prepare_basic_test():
     os.remove(file_name)
 
 
-def test_when_api_is_not_health_should_return_service_unavaliable_status_code():
+def test_when_not_exists_env_var_for_storage_location_should_returnt_service_unavailable():
+    response = client.get("/health")
+    assert response.status_code == 503
+
+
+def test_when_exists_env_var_for_storage_location_but_is_not_a_folder_should_returnt_service_unavailable(monkeypatch):
+    monkeypatch.setenv('STORAGE_LOCATION', '/tmp/')
     response = client.get("/health")
     assert response.status_code == 503
 
@@ -90,18 +96,22 @@ def test_when_try_to_update_fence_and_polygon_has_only_two_coordinates_should_re
     assert response.json() == {"msg": "Invalid polygon, minimun three points"}
 
 
-def test_when_try_to_update_fence_and_poligon_is_not_closed_should_return_bad_request(monkeypatch):
+def test_when_try_to_update_fence_and_poligon_is_not_closed_should_return_bad_request(prepare_basic_test, monkeypatch):
     monkeypatch.setenv('API_KEY', "222222")
+    monkeypatch.setenv('STORAGE_LOCATION', prepare_basic_test)
     response = client.put(
-        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 1}]}, headers={"X-API-KEY": "222222"})
+        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 0}]}, headers={"X-API-KEY": "222222"})
     assert response.status_code == 400
     assert response.json() == {
         "msg": "Invalid polygon, coordenates must be closed"}
 
 
-def test_when_try_to_update_fence_and_poligon_is_not_closed_should_return_bad_request(prepare_basic_test, monkeypatch):
+def test_when_try_to_update_fence_and_poligon_is_valid_should_return_status_code_no_content_and_polygon_must_be_updated(prepare_basic_test, monkeypatch):
     monkeypatch.setenv('API_KEY', "222222")
     monkeypatch.setenv('STORAGE_LOCATION', prepare_basic_test)
     response = client.put(
-        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": 0, "y": 0}]}, headers={"X-API-KEY": "222222"})
+        "/geofence", json={"points": [{"x": 0, "y": 0}, {"x": 2, "y": 0}, {"x": 0, "y": 2}, {"x": 0, "y": 0}]}, headers={"X-API-KEY": "222222"})
+    assert response.status_code == 204
+    response = client.post(
+        "/geofence/point", json={"x": 0.5, "y": 0.5}, headers={"X-API-KEY": "222222"})
     assert response.status_code == 204
