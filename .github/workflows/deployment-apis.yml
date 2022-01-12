@@ -86,7 +86,7 @@ jobs:
   deploy_to_aws:
     needs: [build_geofence_v1, build_geofence_v2]
     runs-on: ubuntu-latest
-      steps:
+    steps:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
@@ -94,4 +94,3 @@ jobs:
           username: ${{ secrets.AWS_USER_NAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: deploy.sh
-
