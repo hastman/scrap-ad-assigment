@@ -31,7 +31,8 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker        
+      - name: Extract metadata (tags, labels) for Docker
+        id: metav1
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: hastman/scrap_ad_v1
@@ -41,8 +42,8 @@ jobs:
         with:
           context: geofenceapi_v1/.
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metav1.outputs.tags }}
+          labels: ${{ steps.metav1.outputs.labels }}
 
       - name: Install dependencies geofenceapi_v2
         run: |
@@ -61,16 +62,17 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker       
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        id: metav2
         with:
           images: hastman/scrap_ad_v2
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc        
         with:
           context: geofenceapi_v2/.
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metav2.outputs.tags }}
+          labels: ${{ steps.metav2.outputs.labels }}
 
       - name: generate badge coverage
         uses: codecov/codecov-action@v2
